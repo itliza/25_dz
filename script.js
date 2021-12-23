@@ -38,7 +38,7 @@ bodyload = async function(){
 
 	let heroComics = heroesForm.querySelector(`select[data-name="heroComics"]`);
 
-	let universes = await controller(API, "GET");
+	let universes = await controller(`https://61c46c02f1af4a0017d99522.mockapi.io/countries`, "GET");
 	for(let key in universes){
 		heroComics.innerHTML += `<option value="${universes[key].country}">${universes[key].country}</option>`
 	}
@@ -70,7 +70,7 @@ heroesForm.addEventListener(`submit`, async e=>{
 
 	console.log(person);
 
-	let persons = await controller(API);
+	let persons = await controller(`https://61c46c02f1af4a0017d99522.mockapi.io/people`);
 
 	let personExist = persons.find(person => person.name === heroName);
 	
@@ -81,7 +81,7 @@ heroesForm.addEventListener(`submit`, async e=>{
 		} 
 	} else {
 		console.log(`Person not exists`);
-		let newPerson = await controller(API, "POST", person);
+		let newPerson = await controller(`https://61c46c02f1af4a0017d99522.mockapi.io/people`, "POST", person);
 		new Person(newPerson);
 	}
 
@@ -117,7 +117,7 @@ class Person{
 
 		deleteBtn.innerHTML = `Delete`;
 		deleteBtn.addEventListener(`click`, async ()=>{
-			let deletedPerson = controller(API+ `/${this.id}`, "DELETE");
+			let deletedPerson = controller(`https://61c46c02f1af4a0017d99522.mockapi.io/people`+ `/${this.id}`, "DELETE");
 			if(deletedPerson){
 				tr.outerHTML = ``;
 			}

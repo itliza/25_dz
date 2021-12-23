@@ -56,12 +56,12 @@ heroesForm.addEventListener(`submit`, async e=>{
 	let heroComics = e.target.querySelector(`select[data-name="heroComics"]`).value;
 	let heroFavourite = e.target.querySelector(`input[data-name="heroFavourite"]:checked`);
 
-	// if(heroFavourite){
-	// 	console.log(heroName, heroComics, `true`);
+	if(heroFavourite){
+		console.log(heroName, heroComics, `true`);
 
-	// } else {
-	// 	console.log(heroName, heroComics, `false`)
-	// }
+	} else {
+		console.log(heroName, heroComics, `false`)
+	}
 	let person = {
 		"name": heroName,
 		"country": heroComics,
@@ -107,7 +107,16 @@ class Person{
 		let tr = document.createElement(`tr`);
 		tr.innerHTML = `<td>${this.name}</td>
 						<td>${this.country}</td>
-						<td>${this.favourite}</td>`
+						`
+
+		let firstTd = document.createElement(`td`);
+		tr.append(firstTd);
+
+		let input = document.createElement(`input`);
+		input.setAttribute("type", "checkbox");
+		firstTd.append(input);
+
+		
 
 		let td = document.createElement(`td`);
 		tr.append(td);
@@ -122,6 +131,10 @@ class Person{
 				tr.outerHTML = ``;
 			}
 		});
+
+		// vfjvfj.addEventListener(`onchange`, ()=>{
+		// 	console.log(`clicked`);
+		// })
 
 		heroesTable.append(tr);
 

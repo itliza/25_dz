@@ -90,7 +90,7 @@ heroesForm.addEventListener(`submit`, async e=>{
 
 // TABLE
 
-const heroesTable = document.querySelector(`#heroesTable`);
+const tbody = document.querySelector(`#heroesTable`);
 
 
 class Person{
@@ -103,34 +103,29 @@ class Person{
 
 	render(){
 
-		let tbody = document.createElement(`tbody`);
 
-		let deleteBtnTr = document.createElement(`tr`);
-		deleteBtnTr.innerHTML = `<td>Actions</td>`
+		let tr = document.createElement(`tr`);
+		tr.innerHTML = `<td>${this.name}</td>
+						<td>${this.country}</td>
+						<td>${this.favourite}</td>`
 
-		let deleteBtnTd = document.createElement(`td`);
+		let td = document.createElement(`td`);
+		tr.append(td);
 
 		let deleteBtn = document.createElement(`button`);
-		deleteBtnTd.append(deleteBtn);
+		td.append(deleteBtn);
 
 		deleteBtn.innerHTML = `Delete`;
 		deleteBtn.addEventListener(`click`, async ()=>{
 			let deletedPerson = controller(API+ `/${this.id}`, "DELETE");
 			if(deletedPerson){
-				tbody.outerHTML = ``;
+				tr.outerHTML = ``;
 			}
 		});
 
-		deleteBtnTd.append(deleteBtn);
+		heroesTable.append(tr);
 
-		tbody.innerHTML = `
-			<tr>
-				<td>${this.name}</td>
-				<td>${this.country}</td>
-				<td>${this.favourite}</td>
-			</tr>`
-		tbody.append(deleteBtnTd)
-		heroesTable.append(tbody);
+
 	}
 }
 

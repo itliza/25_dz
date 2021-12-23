@@ -77,10 +77,10 @@ heroesForm.addEventListener(`submit`, async e=>{
 	if(personExist){
 		if(personExist.name === heroName){
 		console.log(`Person exist`);
-		// new Person(personExist);
+		new Person(personExist);
 		} 
 	} else {
-		// console.log(`Person not exists`)
+		console.log(`Person not exists`);
 		let newPerson = await controller(API, "POST", person);
 		new Person(newPerson);
 	}
@@ -105,14 +105,31 @@ class Person{
 
 		let tbody = document.createElement(`tbody`);
 
+		let deleteBtnTr = document.createElement(`tr`);
+		deleteBtnTr.innerHTML = `<td>Actions</td>`
+
+		let deleteBtnTd = document.createElement(`td`);
+
+		let deleteBtn = document.createElement(`button`);
+		deleteBtnTd.append(deleteBtn);
+
+		deleteBtn.innerHTML = `Delete`;
+		deleteBtn.addEventListener(`click`, async ()=>{
+			let deletedPerson = controller(API+ `/${this.id}`, "DELETE");
+			if(deletedPerson){
+				tbody.outerHTML = ``;
+			}
+		});
+
+		deleteBtnTd.append(deleteBtn);
+
 		tbody.innerHTML = `
 			<tr>
 				<td>${this.name}</td>
 				<td>${this.country}</td>
 				<td>${this.favourite}</td>
-
 			</tr>`
-
+		tbody.append(deleteBtnTd)
 		heroesTable.append(tbody);
 	}
 }

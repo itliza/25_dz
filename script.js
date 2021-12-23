@@ -28,6 +28,7 @@ const controller = async (path, method="GET", obj) =>{
 }
 
 
+const tbody = document.querySelector(`#heroesTable`);
 
 // FORM
 
@@ -54,14 +55,14 @@ heroesForm.addEventListener(`submit`, async e=>{
 
 	let heroName = e.target.querySelector(`input[data-name="heroName"]`).value;
 	let heroComics = e.target.querySelector(`select[data-name="heroComics"]`).value;
-	let heroFavourite = e.target.querySelector(`input[data-name="heroFavourite"]:checked`);
+	let heroFavourite = e.target.querySelector(`input[data-name="heroFavourite"]`).checked;
 
-	if(heroFavourite){
-		console.log(heroName, heroComics, `true`);
+	// if(heroFavourite){
+	// 	console.log(heroName, heroComics, `true`);
 
-	} else {
-		console.log(heroName, heroComics, `false`)
-	}
+	// } else {
+	// 	console.log(heroName, heroComics, `false`)
+	// }
 	let person = {
 		"name": heroName,
 		"country": heroComics,
@@ -75,22 +76,30 @@ heroesForm.addEventListener(`submit`, async e=>{
 	let personExist = persons.find(person => person.name === heroName);
 	
 	if(personExist){
-		if(personExist.name === heroName){
-		console.log(`Person exist`);
-		new Person(personExist);
-		} 
+		if(
+			personExist.name != heroName ||
+			personExist.country != heroComics || 
+			personExist.favourite != heroFavourite 
+		) {
+			console.log(`Person exist`);
+			await controller(`https://61c46c02f1af4a0017d99522.mockapi.io/people/` + personExist.id, "PUT", person);
+			personExist.country = person.country
+			personExist.favourite = person.favourite
+			personTR = tbody.querySelector('#tr-'+personExist.id);
+			if (personTR) {
+				personTR.outerHTML = '';
+			}
+            new Person(personExist);
+			} 
 	} else {
 		console.log(`Person not exists`);
 		let newPerson = await controller(`https://61c46c02f1af4a0017d99522.mockapi.io/people`, "POST", person);
 		new Person(newPerson);
 	}
-
-
 })
 
 // TABLE
 
-const tbody = document.querySelector(`#heroesTable`);
 
 
 class Person{
@@ -108,18 +117,19 @@ class Person{
 		tr.innerHTML = `<td>${this.name}</td>
 						<td>${this.country}</td>
 						`
-
+		tr.setAttribute("id", "tr-"+this.id)
 		let firstTd = document.createElement(`td`);
 		tr.append(firstTd);
 
 		let input = document.createElement(`input`);
 		input.setAttribute("type", "checkbox");
+		input.checked = this.favourite;
 
 		firstTd.append(input);
 
-		input.addEventListener(`change`, ()=>{
-
-			// if(input.value === "checked")
+		input.addEventListener(`change`, async ()=>{
+            this.favourite = input.checked
+			let persons = await controller(`https://61c46c02f1af4a0017d99522.mockapi.io/people/`+ this.id, "PUT", this)
 			console.log(input.checked);
 		})
 		
@@ -132,7 +142,7 @@ class Person{
 
 		deleteBtn.innerHTML = `Delete`;
 		deleteBtn.addEventListener(`click`, async ()=>{
-			let deletedPerson = controller(`https://61c46c02f1af4a0017d99522.mockapi.io/people`+ `/${this.id}`, "DELETE");
+			let deletedPerson = await controller(`https://61c46c02f1af4a0017d99522.mockapi.io/people/`+ this.id, "DELETE");
 			if(deletedPerson){
 				tr.outerHTML = ``;
 			}

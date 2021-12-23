@@ -114,8 +114,14 @@ class Person{
 
 		let input = document.createElement(`input`);
 		input.setAttribute("type", "checkbox");
+
 		firstTd.append(input);
 
+		input.addEventListener(`change`, ()=>{
+
+			// if(input.value === "checked")
+			console.log(input.checked);
+		})
 		
 
 		let td = document.createElement(`td`);

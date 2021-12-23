@@ -27,7 +27,6 @@ const controller = async (path, method="GET", obj) =>{
 
 }
 
-
 const tbody = document.querySelector(`#heroesTable`);
 
 // FORM
@@ -43,7 +42,6 @@ bodyload = async function(){
 	for(let key in universes){
 		heroComics.innerHTML += `<option value="${universes[key].country}">${universes[key].country}</option>`
 	}
-	// console.log(heroComics);
 
 }
 body.addEventListener(`load`, bodyload());
@@ -57,12 +55,6 @@ heroesForm.addEventListener(`submit`, async e=>{
 	let heroComics = e.target.querySelector(`select[data-name="heroComics"]`).value;
 	let heroFavourite = e.target.querySelector(`input[data-name="heroFavourite"]`).checked;
 
-	// if(heroFavourite){
-	// 	console.log(heroName, heroComics, `true`);
-
-	// } else {
-	// 	console.log(heroName, heroComics, `false`)
-	// }
 	let person = {
 		"name": heroName,
 		"country": heroComics,
@@ -148,12 +140,7 @@ class Person{
 			}
 		});
 
-		// vfjvfj.addEventListener(`onchange`, ()=>{
-		// 	console.log(`clicked`);
-		// })
-
 		heroesTable.append(tr);
-
 
 	}
 }

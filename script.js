@@ -27,43 +27,11 @@ const controller = async (path, method="GET", obj) =>{
 
 }
 
+
+
 // FORM
 
 const heroesForm = document.querySelector(`#heroesForm`);
-
-heroesForm.addEventListener(`submit`, async e=>{
-	e.preventDefault();
-
-	let heroName = e.target.querySelector(`input[data-name="heroName"]`).value;
-	let heroComics = e.target.querySelector(`select[data-name="heroComics"]`).value;
-
-	let heroFavourite = e.target.querySelector(`input[data-name="heroFavourite"]:checked`);
-
-	if(heroFavourite){
-		console.log(heroName, heroComics, `true`);
-
-	} else {
-		console.log(heroName, heroComics, `false`)
-	}
-
-	let people = await controller(API);
-	console.log(people);
-
-	let personExist = people.find(person => person.name === heroName);
-	// console.log(personExist);
-	
-
-	if(personExist){
-		if(personExist.name === heroName){
-		console.log(`Person exist`)
-		} 
-	} else {
-			console.log(`Person not exists`)
-	}
-
-
-});
-
 
 let body = document.querySelector(`body`);
 bodyload = async function(){
@@ -80,27 +48,74 @@ bodyload = async function(){
 body.addEventListener(`load`, bodyload());
 
 
-// TABLE
 
+heroesForm.addEventListener(`submit`, async e=>{
+	e.preventDefault();
+
+	let heroName = e.target.querySelector(`input[data-name="heroName"]`).value;
+	let heroComics = e.target.querySelector(`select[data-name="heroComics"]`).value;
+	let heroFavourite = e.target.querySelector(`input[data-name="heroFavourite"]:checked`);
+
+	// if(heroFavourite){
+	// 	console.log(heroName, heroComics, `true`);
+
+	// } else {
+	// 	console.log(heroName, heroComics, `false`)
+	// }
+	let person = {
+		"name": heroName,
+		"country": heroComics,
+		"favourite": heroFavourite
+	}
+
+	console.log(person);
+
+	let persons = await controller(API);
+
+	let personExist = persons.find(person => person.name === heroName);
+	
+	if(personExist){
+		if(personExist.name === heroName){
+		console.log(`Person exist`);
+		// new Person(personExist);
+		} 
+	} else {
+		// console.log(`Person not exists`)
+		let newPerson = await controller(API, "POST", person);
+		new Person(newPerson);
+	}
+
+
+})
+
+// TABLE
 
 const heroesTable = document.querySelector(`#heroesTable`);
 
-let table = document.createElement(`table`);
 
-table.innerHTML = `<th>
-            <tr>
-                <th>Name Surname</th>
-                <th>Comics</th>
-                <th>Favourite</th>
-                <th>Actions</th>
-            </tr>
-            <tr>
-                <td>Checking 1</td>
-                <td>Checking 2</td>
-                <td>Checking 3</td>
-                <td>Checking 4</td>
-            </tr>
-        </th>`;
+class Person{
+	constructor(person){
+		for(let key in person){
+			this[key] = person[key]
+		}
+		this.render()
+	}
 
- heroesTable.append(table);
- // console.log(heroesTable);
+	render(){
+
+		let tbody = document.createElement(`tbody`);
+
+		tbody.innerHTML = `
+			<tr>
+				<td>${this.name}</td>
+				<td>${this.country}</td>
+				<td>${this.favourite}</td>
+
+			</tr>`
+
+		heroesTable.append(tbody);
+	}
+}
+
+
+
